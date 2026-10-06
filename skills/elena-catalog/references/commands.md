@@ -1,8 +1,8 @@
-# CLI candidate 0.1.0: comandos existentes
+# CLI candidate 0.1.0: existing commands
 
-Estos ejemplos describen gramática, no una sesión autorizada ni un lote para ejecutar en bloque. Sustituir `<api-origin>` solo por HTTPS verificado del operador; IDs UUID, cursor y SHA-256 por respuestas reales; `<revision>` es la revisión **approved actual**, no la pending. Nombres de archivo son relativos al proyecto consumidor. No usar placeholders como datos reales.
+These examples describe grammar, not an authorized session or a batch to execute all at once. Replace `<api-origin>` only with operator-verified HTTPS; replace UUID IDs, cursor and SHA-256 with real responses; `<revision>` is the **current approved** revision, not the pending one. Filenames are relative to the consuming project. Do not use placeholders as real data.
 
-## Conexión y lectura
+## Connection and reads
 
 ```bash
 elena-catalog auth login --base-url <api-origin> --no-open
@@ -15,9 +15,9 @@ elena-catalog catalog products get <product-id> --json
 elena-catalog assets get <asset-id> --json
 ```
 
-Login requiere `ELENA_AGENT_STAFF_ORIGIN`, muestra verificationUrl literal/user code y espera decisión humana. Primera página de list omite `--cursor`; continuar con nextCursor hasta null. Ni el login ni context crean cuenta, suscripción o restaurante. Confirmar contexto antes de leer/preparar datos.
+Login requires `ELENA_AGENT_STAFF_ORIGIN`, shows the literal verificationUrl/user code and waits for a human decision. Omit `--cursor` on the first list page; continue with nextCursor until null. Neither login nor context creates an account, subscription or restaurant. Confirm context before reading/preparing data.
 
-## Stage opcional y preview
+## Optional stage and preview
 
 ```bash
 elena-catalog media stage ./foto.png --idempotency-key carta-foto-1 --json
@@ -26,9 +26,9 @@ elena-catalog import preview --file ./preview.json --json
 elena-catalog import status <import-id> --json
 ```
 
-No stage sin archivo local verificado y permiso; stage no publica. `preview.json` es request V1 completo: ver [JSON](catalog-json.md). Mostrar filas inválidas/conflictivas y confirmar selección antes de propuesta.
+Do not stage without a verified local file and permission; stage does not publish. `preview.json` is a complete V1 request: see [JSON](catalog-json.md). Show invalid/conflicting rows and confirm the selection before proposing.
 
-## Propuesta, pausa humana y aplicación
+## Proposal, human pause and apply
 
 ```bash
 elena-catalog operations propose --file ./proposal.json --json
@@ -36,7 +36,7 @@ elena-catalog operations list --limit 25 --json
 elena-catalog operations status <operation-id> --json
 ```
 
-**Pausa:** entregar approvalUrl literal. Esperar aprobación del dueño en panel; volver a consultar status y usar revisión/hash exactos. No concatenar automáticamente propose y apply en un script. Solo entonces:
+**Pause:** provide the literal approvalUrl. Wait for owner approval in the dashboard; query status again and use the exact revision/hash. Do not automatically chain propose and apply in a script. Only then:
 
 ```bash
 elena-catalog operations apply <operation-id> --revision <revision> --payload-hash <payload-hash> --json
@@ -45,10 +45,10 @@ elena-catalog catalog products get <product-id> --json
 elena-catalog auth logout --json
 ```
 
-Releer también categorías afectadas; no interpretar applying como applied. Logout no revoca autoridad remota. Para publicación, el mismo propose recibe payload publication separado, nunca un `--apply` o `--publish` de import.
+Also re-read affected categories; do not interpret applying as applied. Logout does not revoke remote authority. For publication, the same propose command receives a separate publication payload, never an import `--apply` or `--publish` flag.
 
-## Salidas y recuperación
+## Outputs and recovery
 
-Éxito wire JSON sin envelope; errores JSON seguros por stderr. `--json` es global, no crea otro protocolo. Exit 0 puede ser preview, pending o applying, no prueba efectos. Exit 2: uso/schema; 3: acceso/aprobación; 4: conflicto/terminal no satisfactorio (incluye partial); 5: transitorio/red. Consultar estado antes de reintentar mutación ambigua; no reintentar automáticamente errores de permisos, datos, hash o versión.
+Successful responses are wire JSON without an envelope; safe JSON errors go to stderr. `--json` is global and does not create another protocol. Exit 0 may mean preview, pending or applying; it does not prove effects. Exit 2: usage/schema; 3: access/approval; 4: conflict/unsuccessful terminal state (including partial); 5: transient/network. Query status before retrying an ambiguous mutation; do not automatically retry permission, data, hash or version errors.
 
-Flags desconocidos, posicionales extra, `--key`, `--token`, `--restaurant-id`, `--apply`, `approve` y comandos tenant no existen. La autoría valida estos ejemplos importando parser **source** en tests privados; el paquete CLI distribuye su bin, no un export público de parser.
+Unknown flags, extra positionals, `--key`, `--token`, `--restaurant-id`, `--apply`, `approve` and tenant commands do not exist. Authoring validates these examples by importing parser **source** in private tests; the CLI package distributes its bin, not a public parser export.

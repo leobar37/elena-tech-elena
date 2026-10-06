@@ -1,10 +1,10 @@
-# Requests V1: ejemplos sintéticos, no órdenes de ejecución
+# V1 requests: synthetic examples, not execution orders
 
-Los UUID/hash/versiones siguientes son placeholders de prueba. No son filas reales ni aprobación. El ejemplo de precio confirmado simula una revisión para probar el contrato: en operación real se requiere revisión explícita del humano, lectura del agregado completo y versiones actuales. No copiar estos JSON directamente a producción. Las respuestas usan IDs/hashes del servidor, nunca se calculan desde la transcripción.
+The UUIDs/hashes/versions below are test placeholders. They are neither real rows nor approval. The confirmed-price example simulates a review to test the contract: real operation requires explicit human review, a read of the complete aggregate and current versions. Do not copy these JSON examples directly into production. Responses use server-provided IDs/hashes, never values calculated from the transcription. Spanish strings such as “Bebidas” and “Agua” are synthetic catalog data, not agent instructions; preserve them as data.
 
 ## preview.json
 
-Request completo. La identidad externa es estable dentro del restaurante, no una coincidencia por nombre. `expectedVersion: null` afirma ausencia; si ya existe, resolver el conflicto con lectura/identidad/versiones actuales. Confirmar también disponibilidad, descripción, galería y ausencia de extras, no solo precio.
+Complete request. External identity is stable within the restaurant, not a name match. `expectedVersion: null` asserts absence; if the entity already exists, resolve the conflict using current reads/identity/versions. Also confirm availability, description, gallery and absence of extras, not just the price.
 
 ```json
 {
@@ -49,11 +49,11 @@ Request completo. La identidad externa es estable dentro del restaurante, no una
 }
 ```
 
-Una price ilegible se representa con `{ "status": "unconfirmed", "reason": "illegible", "rawText": null }`. Es válida como evidencia de preview pero su fila queda invalid, sin cambio ejecutable: no seleccionarla. `basis: "sample"` solo pertenece a la fixture neutral Molly, no a preview/proposal. PEN usa string positivo con dos decimales; no number, cero, coma, exponentes o aproximación. Una descripción `proposed` no se presenta como transcripción ni como ya aplicada.
+An illegible price is represented as `{ "status": "unconfirmed", "reason": "illegible", "rawText": null }`. It is valid preview evidence, but its row remains invalid with no executable change: do not select it. `basis: "sample"` belongs only to the neutral Molly fixture, not preview/proposal. PEN uses a positive string with two decimal places; no number, zero, comma, exponents or approximation. A `proposed` description must not be presented as a transcription or as already applied.
 
-## proposal.json de import
+## Import proposal.json
 
-Solo después de revisar preview: reemplazar importId/planHash por los retornados y selectedRefs por la selección humana explícita. Incluir categorías dependientes incluso si son skip. No incluir filas invalid/conflict ni asumir que servidor ampliará el conjunto.
+Only after reviewing the preview: replace importId/planHash with the returned values and selectedRefs with the explicit human selection. Include dependent categories even if they are skip rows. Do not include invalid/conflict rows or assume that the server will expand the set.
 
 ```json
 {
@@ -68,11 +68,11 @@ Solo después de revisar preview: reemplazar importId/planHash por los retornado
 }
 ```
 
-Propose devuelve approvalUrl literal. Esperar humano, releer estado approved y luego apply exacto; aprobación no ejecuta. Misma idempotencyKey requiere mismo payload; datos cambiados necesitan otra key. Preview/propuesta expiran a las 24h sin extensión por aprobación. Drift de versiones requiere propuesta/aprobación nuevas.
+Propose returns the literal approvalUrl. Wait for the human, re-read the approved state, then apply exactly; approval does not execute. The same idempotencyKey requires the same payload; changed data needs another key. Preview/proposal expire after 24h, with no extension on approval. Version drift requires a new proposal/approval.
 
-## Propuesta de publicación separada
+## Separate publication proposal
 
-Nuevo producto queda no publicado tras importar. Con `catalog:publish`, leer ID/version real del producto creado y preparar **otra** propuesta. Este ejemplo no autoriza publicación por lote implícito:
+A new product remains unpublished after import. With `catalog:publish`, read the created product's actual ID/version and prepare **another** proposal. This example does not authorize implicit batch publication:
 
 ```json
 {
@@ -88,4 +88,4 @@ Nuevo producto queda no publicado tras importar. Con `catalog:publish`, leer ID/
 }
 ```
 
-No usar `isDraft`, stock, recetas, unidades, ingredientes, costos ni campos upstream desconocidos en los requests. `extras.confirmed` exige verificación comercial: una categoría Extras no constituye evidencia de modificadores. Combos de Molly son un artículo sample-only, no receta. El original de Molly no está disponible; nunca atribuirle OCR exacto o aprobación real.
+Do not use `isDraft`, stock, recipes, units, ingredients, costs or unknown upstream fields in requests. `extras.confirmed` requires verification of the commercial offering: an “Extras” category is not evidence of modifiers. Molly combos are single sample-only items, not recipes. The Molly original is unavailable; never attribute exact OCR or real approval to it.

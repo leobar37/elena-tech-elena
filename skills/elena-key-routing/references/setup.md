@@ -1,16 +1,16 @@
-# Setup asistido: no es provisioning
+# Assisted setup: not provisioning
 
-CLI/SDK 0.1.0 / V1 son candidate local, no publicados en npm. Un endpoint documentado no prueba despliegue. El piloto parte de un restaurante existente, activo, aprobado y autorizado; confirmar con el operador API origin HTTPS y staff origin HTTPS habilitados. No adivinar dominios ni reemplazar origin/prefix del host de documentación.
+CLI/SDK 0.1.0 / V1 are local candidates, not published on npm. A documented endpoint does not prove deployment. The pilot starts with an existing, active, approved and authorized restaurant; confirm the enabled HTTPS API origin and HTTPS staff origin with the operator. Do not guess domains or replace the documentation host's origin/prefix.
 
-Para una cuenta nueva, el **dueño humano** usa el panel ya existente:
+For a new account, the **human owner** uses the existing dashboard:
 
-1. `/register` con su sesión Better Auth.
+1. `/register` with their Better Auth session.
 2. `/onboarding/step-1`, `/onboarding/step-2`, `/onboarding/step-3`.
-3. La finalización puede devolver `pendingApproval`; esperar el checkpoint humano vigente en `/pending-approval`. No aprobar automáticamente ni usar SQL/seed/System Admin para desbloquearlo.
-4. Con aprobación y `apiAccess` efectivos, confirmar el restaurante activo en `/agent-access`. Allí el dueño administra Agent/Client Keys; la API Key legacy permanece en `/api-keys`.
-5. Para pairing, el humano abre la `verificationUrl` literal emitida por CLI, correspondiente a `/agent-access/connect`, y escribe únicamente el user code. Revisa restaurante, nombre del dispositivo, grants y TTL. Nunca introducir una Agent Key ni device code en esa pantalla. El agente espera la decisión.
-6. Después de conectar, leer `context` y pedir confirmación del restaurante retornado. Si no corresponde, detenerse: no hay selección de tenant en CLI. El dueño debe corregir la conexión por las superficies humanas.
+3. Completion may return `pendingApproval`; wait for the current human checkpoint at `/pending-approval`. Do not approve automatically or use SQL/seed/System Admin to unblock it.
+4. With effective approval and `apiAccess`, confirm the active restaurant at `/agent-access`. The owner manages Agent/Client Keys there; the legacy API Key remains at `/api-keys`.
+5. For pairing, the human opens the literal `verificationUrl` issued by the CLI, corresponding to `/agent-access/connect`, and enters only the user code. They review the restaurant, device name, grants and TTL. Never enter an Agent Key or device code on that screen. The agent waits for the decision.
+6. After connecting, read `context` and ask for confirmation of the returned restaurant. If it does not match, stop: the CLI has no tenant selection. The owner must correct the connection through the human-facing surfaces.
 
-Las invitaciones `/invitations/:token` agregan staff a un restaurante existente: **no** aprovisionan dueño/restaurant ni conceden `apiAccess`. Si falta cuenta, elegibilidad, aprobación o endpoint habilitado, el siguiente paso es humano/soporte; no un comando create/select/switch.
+Invitations at `/invitations/:token` add staff to an existing restaurant: they do **not** provision an owner/restaurant or grant `apiAccess`. If an account, eligibility, approval or an enabled endpoint is missing, the next step is a human/support checkpoint, not a create/select/switch command.
 
-La sesión del panel no reemplaza Agent Key. No compartir secretos en chat. El secreto Agent queda en almacenamiento local protegido de la CLI o en el entorno protegido del proceso, nunca en frontend. La Client Key es publicable pero su emisión/reemplazo siguen siendo acciones del dueño. No copiar el secreto de servidor a un proyecto público.
+The dashboard session does not replace an Agent Key. Do not share secrets in chat. The Agent secret stays in protected local CLI storage or in the process's protected environment, never in the frontend. A Client Key is publishable, but issuing/replacing it remains an owner action. Do not copy the server secret into a public project.

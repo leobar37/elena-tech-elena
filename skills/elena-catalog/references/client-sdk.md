@@ -1,8 +1,8 @@
-# Lectura publicada: Client SDK candidate
+# Published reads: Client SDK candidate
 
-`@theelena/sdk` 0.1.0 candidate local, no publicado. Instalar el tarball verificado entregado por el operador; la distribución pública de las skills no implica que el SDK esté disponible en npm ni que existan endpoints productivos desplegados. Este ejemplo no crea un storefront ni un pedido.
+`@theelena/sdk` 0.1.0 is an unpublished local candidate. Install the verified tarball provided by the operator; public distribution of the skills does not imply that the SDK is available on npm or that production endpoints are deployed. This example creates neither a storefront nor an order.
 
-La entrada pública exporta `createElenaClientKeyClient`; el host consumidor proporciona `apiOrigin` HTTPS explícito y `clientKey` publicable `elena_pk_` emitida por dueño autorizado. No hay API origin por defecto para esta frontera. El origin solo admite esquema/host/puerto, no path/query/hash/userinfo. No tomar la URL de una fuente no confiable.
+The public entry point exports `createElenaClientKeyClient`; the consuming host provides an explicit HTTPS `apiOrigin` and a publishable `elena_pk_` `clientKey` issued by an authorized owner. There is no default API origin for this boundary. The origin allows only scheme/host/port, not path/query/hash/userinfo. Do not take the URL from an untrusted source.
 
 ```ts
 import { createElenaClientKeyClient } from '@theelena/sdk';
@@ -15,8 +15,8 @@ export async function readPublishedMenu(apiOrigin: string, clientKey: string) {
 }
 ```
 
-Paginación posterior: usar `catalog.list({ version: '1', limit: 25, cursor: firstPage.nextCursor })` solo si nextCursor no es null. Toda query explícita incluye `version: '1'`; `catalog.list()` sin argumentos usa la query predeterminada del SDK. `catalog.getProduct(id)` y `assets.get(id)` completan lectura por UUID. El SDK usa `x-elena-client-key`, `/api/v1/public/sdk/*`, sin Cookie, Authorization ni header legacy. No acepta selección de tenant, reenvío de headers arbitrarios ni redirects autenticados.
+For subsequent pages, use `catalog.list({ version: '1', limit: 25, cursor: firstPage.nextCursor })` only if nextCursor is not null. Every explicit query includes `version: '1'`; `catalog.list()` without arguments uses the SDK's default query. `catalog.getProduct(id)` and `assets.get(id)` provide reads by UUID. The SDK uses `x-elena-client-key`, `/api/v1/public/sdk/*`, without Cookie, Authorization or a legacy header. It does not accept tenant selection, arbitrary header forwarding or authenticated redirects.
 
-Solo devuelve carta publicada: excluye unpublished, assistant drafts, eliminados y campos privados; assets únicamente alcanzables desde artículos visibles del restaurante ligado. `available: false` no despublica. La Client Key no escribe, propone, aprueba, aplica ni administra keys; sigue sujeta a vigencia/comercialización/autorización del servidor.
+It returns only the published menu: it excludes unpublished items, assistant drafts, deleted items and private fields; assets must be reachable from visible items in the bound restaurant. `available: false` does not unpublish an item. A Client Key does not write, propose, approve, apply or manage keys; it remains subject to server-side validity/commercial-access/authorization checks.
 
-Agent Key `elena_sk_` es secreta y solo server-side con CLI o `@theelena/sdk/agent`. Nunca importarla desde frontend ni ponerla en props/bundle/URL. No reutilizar el secreto Agent como Client Key. Las APIs existentes `createElenaPublicClient` por slug y `createElenaJourneyClient` conservan sus contratos; access points `pub_` y journeys no se convierten a Client Key. System Admin permanece fuera del flujo.
+An Agent Key `elena_sk_` is secret and server-side only, with the CLI or `@theelena/sdk/agent`. Never import it into the frontend or put it in props/bundle/URL. Do not reuse the Agent secret as a Client Key. The existing slug-based `createElenaPublicClient` and `createElenaJourneyClient` APIs retain their contracts; `pub_` access points and journeys do not become Client Keys. System Admin remains outside this flow.
